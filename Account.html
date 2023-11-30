@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            background-image: url('https://i.pinimg.com/564x/86/a7/4b/86a74b951543653e9c05ade7d4a914f5.jpg');
+        }
+
+        header {
+            background-color: #287bff;
+            color: #fff;
+            text-align: center;
+            padding: 1em 0;
+        }
+
+        #account-form {
+            max-width: 400px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        #account-table {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333;
+            color: #fff;
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+        }
+    </style>
+    <title>Personal Finance Management - Accounts</title>
+</head>
+<body>
+<header>
+    <h1>Accounts Page</h1>
+</header>
+<section id="account-form">
+    <label for="account-number">Account Number:</label>
+    <input type="text" id="account-number" placeholder="Enter the account number">
+
+    <label for="account-type">Account Type:</label>
+    <select id="account-type">
+        <option value="savings">Savings</option>
+        <option value="checking">Checking</option>
+        <option value="credit">Credit</option>
+    </select>
+
+    <label for="current-balance">Current Balance (INR):</label>
+    <input type="number" id="current-balance" placeholder="Enter the current balance">
+
+    <button onclick="handleFormSubmit()">Add Account</button>
+</section>
+
+<section id="account-table">
+    <h2>Your Accounts List:</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Account Number</th>
+            <th>Account Type</th>
+            <th>Current Balance (INR)</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody id="list"></tbody>
+    </table>
+</section>
+
+<script>
+    function addAccount() {
+        const accountNumber = document.getElementById('accountnumber').value;
+        const accountType = document.getElementById('accounttype').value;
+        const currentBalance = parseFloat(document.getElementById('currentbalance').value);
+
+        if (accountNumber.trim() !== '' && accountType && !isNaN(currentBalance)) {
+            const tableBody = document.getElementById('list');
+            const newRow = tableBody.insertRow();
+
+            const cell1 = newRow.insertCell(0);
+            const cell2 = newRow.insertCell(1);
+            const cell3 = newRow.insertCell(2);
+            const cell4 = newRow.insertCell(3);
+
+            cell1.textContent = accountNumber;
+            cell2.textContent = accountType.charAt(0).toUpperCase() + accountType.slice(1);
+            cell3.textContent = ₹${currentBalance.toLocaleString('en-IN')};
+
+            const updateButton = document.createElement('button');
+            updateButton.textContent = 'Update';
+            updateButton.onclick = function () {
+                updateAccount(newRow.rowIndex - 1);
+            };
+            cell4.appendChild(updateButton);
+
+            const removeButton = document.createElement('button');
+            removeButton.textContent = 'Remove';
+            removeButton.onclick = function () {
+                removeAccount(newRow.rowIndex - 1);
+            };
+            cell4.appendChild(removeButton);
+
+
+            // Clear input fields after adding to the list
+            document.getElementById('accountnumber').value = '';
+            document.getElementById('accounttype').value = 'savings';
+            document.getElementById('currentbalance').value = '';
+        } else {
+            alert('Please enter valid account details.');
+        }
+    }
+
+    function updateAccount(index) {
+        const accountNumber = prompt('Enter the new account number:');
+        const accountType = prompt('Enter the new account type (savings/checking/credit):');
+        const currentBalance = parseFloat(prompt('Enter the new current balance (INR):'));
+
+        if (accountNumber.trim() !== '' && accountType && !isNaN(currentBalance)) {
+            const tableBody = document.getElementById('list');
+            const rows = tableBody.getElementsByTagName('tr');
+            const selectedRow = rows[index];
+
+            selectedRow.cells[0].textContent = accountNumber;
+            selectedRow.cells[1].textContent = accountType.charAt(0).toUpperCase() + accountType.slice(1);
+            cell3.textContent = ₹${currentBalance.toLocaleString('en-IN')};
+
+        } else {
+            alert('Please enter valid account details.');
+        }
+    }
+
+    const deleteIcon = document.createElement('ion-icon');
+    deleteIcon.setAttribute('name', 'trash-outline');
+    deleteIcon.style.cursor = 'pointer';
+    deleteIcon.onclick = function () {
+        removeAccount(newRow.rowIndex - 1);
+    };
+    cell4.appendChild(deleteIcon);
+
+    function handleFormSubmit() {
+    const bookData = {
+        accountnumber: document.getElementById('accountnumber').value,
+        accounttype: document.getElementById('accounttype').value,
+        currentbalance: document.getElementById('currentbalance').value,
+    };
+     console.log(bookData);
+    // Send a POST request to add a book
+    fetch('http://localhost:3000//users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(bookData),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Book added successfully:', data);
+      alert('Book added successfully');
+      // You can perform additional actions here if needed
+    })
+    .catch(error => {
+      console.error('Error adding book:', error);
+      alert('Book notadded successfully subject id is wrong');
+    });
+  }
+ 
+</script>
+</body>
+</html>
