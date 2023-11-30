@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <style>
+        body {
+            background-image: url('https://img.freepik.com/premium-photo/finance-report-graph-with-coin-illustration_180947-704.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #profileForm {
+            width: 300px;
+            text-align: left;
+        }
+        label {
+            color: white;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        button {
+            width: 100%;
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div id="profileForm">
+    <h1 style="color: white">Profile Information</h1>
+
+    <form>
+        <label for="userName">User Name:</label>
+        <input type="text" id="userName" disabled>
+
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" disabled>
+
+        <label for="gender">Gender:</label>
+        <select id="gender" disabled>
+            <option value="male" selected>Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+        </select>
+
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" onchange="calculateAge()" disabled>
+
+        <label for="age">Age:</label>
+        <input type="text" id="age" disabled>
+
+        <label for="city">City:</label>
+        <input type="text" id="city" disabled>
+
+        <label for="district">District:</label>
+        <input type="text" id="district" disabled>
+
+        <label for="state">State:</label>
+        <input type="text" id="state" disabled>
+
+        <label for="pincode">Pincode:</label>
+        <input type="text" id="pincode" disabled>
+
+        <button type="button" onclick="enableEdit()">Edit</button>
+        <button type="button" onclick="handleFormSubmit()" style="display: none;">Save Changes</button>
+    </form>
+</div>
+
+<script>
+    function enableEdit() {
+        const form = document.getElementById('profileForm');
+        const inputs = form.querySelectorAll('input, select, textarea');
+        const editButton = form.querySelector('button');
+        const saveButton = form.querySelector('button[type="button"]:last-child');
+
+        inputs.forEach(input => {
+            input.removeAttribute('disabled');
+        });
+
+        editButton.style.display = 'none';
+        saveButton.style.display = 'block';
+    }
+
+    function saveChanges() {
+        const form = document.getElementById('profileForm');
+        const inputs = form.querySelectorAll('input, select, textarea');
+        const editButton = form.querySelector('button');
+        const saveButton = form.querySelector('button[type="button"]:last-child');
+
+        inputs.forEach(input => {
+            input.setAttribute('disabled', 'true');
+        });
+
+        editButton.style.display = 'block';
+        saveButton.style.display = 'none';
+
+    }
+
+    function calculateAge() {
+        const dobInput = document.getElementById('dob');
+        const ageInput = document.getElementById('age');
+
+        const dob = new Date(dobInput.value);
+        const today = new Date();
+        const age = today.getFullYear() - dob.getFullYear();
+
+        // Adjust age if birthday hasn't occurred yet this year
+        if (today.getMonth() < dob.getMonth() || (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate())) {
+            ageInput.value = age - 1;
+        } else {
+            ageInput.value = age;
+        }
+    }
+
+    function handleFormSubmit() {
+    const bookData = {
+      userName: document.getElementById('userName').value,
+      phone: document.getElementById('phone').value,
+      gender: document.getElementById('gender').value,
+      dob: document.getElementById('dob').value,
+      age: document.getElementById('age').value,
+      city: document.getElementById('city').value,
+      district: document.getElementById('district').value,
+      state: document.getElementById('state').value,
+      pincode: document.getElementById('pincode').value,
+     
+    };
+     console.log(bookData);
+    // Send a POST request to add a book
+    fetch('http://localhost:3000//users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(bookData),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Book added successfully:', data);
+      alert('Book added successfully');
+      // You can perform additional actions here if needed
+    })
+    .catch(error => {
+      console.error('Error adding book:', error);
+      alert('Book notadded successfully subject id is wrong');
+    });
+  }
+</script>
+
+</body>
+</html>

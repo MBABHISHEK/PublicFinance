@@ -3,164 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Page</title>
     <style>
         body {
-            background-image: url('https://img.freepik.com/premium-photo/finance-report-graph-with-coin-illustration_180947-704.jpg');
-            background-size: cover;
-            background-repeat: no-repeat;
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             height: 100vh;
+            background-color: #f4f4f4;
+            background-image: url("https://i.pinimg.com/564x/25/f3/79/25f3792bb151520d1ae87926e8e6633a.jpg");
+            background-size: cover ;
+            background-repeat: no-repeat ;
         }
-        #profileForm {
-            width: 300px;
-            text-align: left;
+
+        h1 {
+            text-align: center;
         }
+
+        form {
+            max-width: 400px;
+            width: 100%;
+        }
+
         label {
-            color: white;
-            display: block;
             margin-bottom: 5px;
+            display: block;
         }
-        input, select {
+
+        input {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             margin-bottom: 10px;
+            box-sizing: border-box;
         }
+
+        .error {
+            color: red;
+        }
+
         button {
-            width: 100%;
-            padding: 8px 15px;
-            background-color: #4CAF50;
+            background-color: #4caf50;
             color: #fff;
+            padding: 10px 15px;
             border: none;
+            border-radius: 4px;
             cursor: pointer;
         }
+
+        button:hover {
+            background-color: #45a049;
+        }
     </style>
+    <title>Account Creation</title>
 </head>
 <body>
 
-<div id="profileForm">
-    <h1 style="color: white">Profile Information</h1>
+<h1>Login</h1>
 
-    <form>
-        <label for="userName">User Name:</label>
-        <input type="text" id="userName" disabled>
+<form id="loginForm" onsubmit="authenticateUser(event)">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required>
+    <br>
 
-        <label for="phone">Phone Number:</label>
-        <input type="tel" id="phone" disabled>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+    <span id="loginError" class="error"></span>
+    <br>
 
-        <label for="gender">Gender:</label>
-        <select id="gender" disabled>
-            <option value="male" selected>Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-        </select>
+    <button type="submit">Log In</button>
+</form>
 
-        <label for="dob">Date of Birth:</label>
-        <input type="date" id="dob" onchange="calculateAge()" disabled>
-
-        <label for="age">Age:</label>
-        <input type="text" id="age" disabled>
-
-        <label for="city">City:</label>
-        <input type="text" id="city" disabled>
-
-        <label for="district">District:</label>
-        <input type="text" id="district" disabled>
-
-        <label for="state">State:</label>
-        <input type="text" id="state" disabled>
-
-        <label for="pincode">Pincode:</label>
-        <input type="text" id="pincode" disabled>
-
-        <button type="button" onclick="enableEdit()">Edit</button>
-        <button type="button" onclick="handleFormSubmit()" style="display: none;">Save Changes</button>
-    </form>
-</div>
 
 <script>
-    function enableEdit() {
-        const form = document.getElementById('profileForm');
-        const inputs = form.querySelectorAll('input, select, textarea');
-        const editButton = form.querySelector('button');
-        const saveButton = form.querySelector('button[type="button"]:last-child');
+    function authenticateUser(event) {
+        event.preventDefault();
 
-        inputs.forEach(input => {
-            input.removeAttribute('disabled');
-        });
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
 
-        editButton.style.display = 'none';
-        saveButton.style.display = 'block';
-    }
-
-    function saveChanges() {
-        const form = document.getElementById('profileForm');
-        const inputs = form.querySelectorAll('input, select, textarea');
-        const editButton = form.querySelector('button');
-        const saveButton = form.querySelector('button[type="button"]:last-child');
-
-        inputs.forEach(input => {
-            input.setAttribute('disabled', 'true');
-        });
-
-        editButton.style.display = 'block';
-        saveButton.style.display = 'none';
-
-    }
-
-    function calculateAge() {
-        const dobInput = document.getElementById('dob');
-        const ageInput = document.getElementById('age');
-
-        const dob = new Date(dobInput.value);
-        const today = new Date();
-        const age = today.getFullYear() - dob.getFullYear();
-
-        // Adjust age if birthday hasn't occurred yet this year
-        if (today.getMonth() < dob.getMonth() || (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate())) {
-            ageInput.value = age - 1;
+        // Check if the entered username and password match the predefined values
+        if (username === "PersonalFinance" && password === "123456") {
+            // Authentication successful, redirect or perform other actions
+            alert("Login successful!");
+            // For demonstration purposes, just display an alert; in a real system, you would redirect to another page.
+            window.location.href = "dashboard.html";
         } else {
-            ageInput.value = age;
+            // Display error message for incorrect credentials
+            document.getElementById("loginError").innerText = "Invalid username or password";
         }
     }
-
-    function handleFormSubmit() {
-    const bookData = {
-      userName: document.getElementById('userName').value,
-      phone: document.getElementById('phone').value,
-      gender: document.getElementById('gender').value,
-      dob: document.getElementById('dob').value,
-      age: document.getElementById('age').value,
-      city: document.getElementById('city').value,
-      district: document.getElementById('district').value,
-      state: document.getElementById('state').value,
-      pincode: document.getElementById('pincode').value,
-     
-    };
-     console.log(bookData);
-    // Send a POST request to add a book
-    fetch('http://localhost:3000//users', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(bookData),
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Book added successfully:', data);
-      alert('Book added successfully');
-      // You can perform additional actions here if needed
-    })
-    .catch(error => {
-      console.error('Error adding book:', error);
-      alert('Book notadded successfully subject id is wrong');
-    });
-  }
 </script>
 
 </body>
