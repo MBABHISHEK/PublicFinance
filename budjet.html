@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            background-image: url('https://assets.website-files.com/622980b17c89911aac06c627/623866a803cfa4e1b13a136b_sfeloans_budgetplanning.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+
+        }
+
+        header {
+            background-color: #287BFFFF;
+            color: #fff;
+            text-align: center;
+            padding: 1em 0;
+        }
+
+        #budget-form {
+            max-width: 400px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        #budget-table {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333;
+            color: #fff;
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+        }
+
+        button.edit, button.delete {
+            background-color: #ddd;
+            color: #333;
+            padding: 8px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        button.edit:hover, button.delete:hover {
+            background-color: #ccc;
+        }
+    </style>
+    <title>Personal Finance Management - Budgets</title>
+</head>
+<body>
+<header>
+    <h1>Budgets Page</h1>
+</header>
+<section id="budget-form">
+    <label for="budget-amount">Budget Amount (INR):</label>
+    <input type="number" id="budget-amount" placeholder="Enter the budget amount">
+
+    <label for="start-date">Start Date:</label>
+    <input type="date" id="start-date">
+
+    <label for="end-date">End Date:</label>
+    <input type="date" id="end-date">
+
+    <button onclick="handleFormSubmit()">Add Budget</button>
+</section>
+
+<section id="budget-table">
+    <h2>Your Budgets List:</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Budget Amount (INR)</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody id="list"></tbody>
+    </table>
+</section>
+
+<script>
+    function addBudget() {
+        const budgetAmount = parseFloat(document.getElementById('budgetamount').value);
+        const startDate = document.getElementById('startdate').value;
+        const endDate = document.getElementById('enddate').value;
+
+        if (!isNaN(budgetAmount) && startDate && endDate) {
+            const tableBody = document.getElementById('list');
+            const newRow = tableBody.insertRow();
+
+            const cell1 = newRow.insertCell(0);
+            const cell2 = newRow.insertCell(1);
+            const cell3 = newRow.insertCell(2);
+            const cell4 = newRow.insertCell(3);
+
+            cell1.textContent = ₹${budgetAmount.toLocaleString('en-IN')}; // Fix here
+            cell2.textContent = startDate;
+            cell3.textContent = endDate;
+            cell4.innerHTML = `<button class="edit" onclick="updateBudget(${newRow.rowIndex - 1})">Edit</button>
+                     <button class="delete" onclick="removeBudget(${newRow.rowIndex - 1})">Delete</button>`;
+
+            // Clear input fields after adding to the list
+            document.getElementById('budgetamount').value = '';
+            document.getElementById('startdate').value = '';
+            document.getElementById('enddate').value = '';
+        } else {
+            alert('Please enter valid budget details.');
+        }
+    }
+
+
+    function updateBudget(index) {
+        const tableBody = document.getElementById('list').rows[index].cells;
+        const updatedAmount = parseFloat(prompt('Enter updated budget amount:', tableBody[0].textContent.replace('₹', '').replace(/,/g, '')));
+        const updatedStartDate = prompt('Enter updated start date:', tableBody[1].textContent);
+        const updatedEndDate = prompt('Enter updated end date:', tableBody[2].textContent);
+
+        if (!isNaN(updatedAmount) && updatedStartDate && updatedEndDate) {
+            tableBody[0].textContent = ₹${targetAmount.toLocaleString('en-IN')};
+            tableBody[1].textContent = updatedStartDate;
+            tableBody[2].textContent = updatedEndDate;
+        } else {
+            alert('Please enter valid updated details.');
+        }
+    }
+
+    function removeBudget(index) {
+        document.getElementById('list').deleteRow(index);
+    }
+
+    function handleFormSubmit() {
+    const bookData = {
+        budgetamount: document.getElementById('budgetamount').value,
+        startdate: document.getElementById('startdate').value,
+        enddate: document.getElementById('enddate').value,
+    };
+     console.log(bookData);
+    // Send a POST request to add a book
+    fetch('http://localhost:3000//users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(bookData),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Book added successfully:', data);
+      alert('Book added successfully');
+      // You can perform additional actions here if needed
+    })
+    .catch(error => {
+      console.error('Error adding book:', error);
+      alert('Book notadded successfully subject id is wrong');
+    });
+  }
+</script>
+</body>
+</html>
