@@ -27,11 +27,12 @@ app.use(express.urlencoded({ extended: true }));
 
 
 app.post('/user', (req, res) => {
-    const {userid, username, dob, city, district, state, pincode, phone_num, age } = req.body;
-    const query = 'INSERT INTO user (userid,username, dob, city, district, state, pincode, phone_num, age) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-    const values = [userid,username, dob, city, district, state, pincode, phone_num, age];
-  
-    db.query(query, values, (err, result) => {
+     console.log('hai');
+    const {userName, dob, city, district, state, pincode,phone, age } = req.body;
+    const query = 'INSERT INTO user (username, dob, city, district, state, pincode, phone_num, age) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+    const values = [userName, dob, city, district, state, pincode, phone, age];
+     console.log(typeof(phone_num))
+    connection.query(query, values, (err, result) => {
       if (err) {
         console.error('Error adding user:', err);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -187,6 +188,11 @@ app.post('/user', (req, res) => {
     });
   });
 
+
+  app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+  });
+  
  /* app.post('/dependent', (req, res) => {
     const {did,loanid,name,dob,age } = req.body;
     const query = 'INSERT INTO dependent (did,loanid,name,dob,age ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';

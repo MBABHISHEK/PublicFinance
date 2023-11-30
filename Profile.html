@@ -139,11 +139,13 @@
       district: document.getElementById('district').value,
       state: document.getElementById('state').value,
       pincode: document.getElementById('pincode').value,
+      phone:document.getElementById('phone').value
+
      
     };
      console.log(bookData);
     // Send a POST request to add a book
-    fetch('http://localhost:3000//users', {
+    fetch('http://localhost:3000/user', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -158,7 +160,7 @@
     })
     .catch(error => {
       console.error('Error adding book:', error);
-      alert('Book notadded successfully subject id is wrong');
+      alert('Book notadded successfully subject id is wrong', error);
     });
   }
 </script>
